@@ -1,247 +1,444 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Greenhouse · Control Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-</head>
-<body>
-
-<!-- ═══════════════════════  BACKGROUND  ═══════════════════════ -->
-<div class="bg-grid"></div>
-<div class="bg-orbs">
-  <span class="orb orb-1"></span>
-  <span class="orb orb-2"></span>
-  <span class="orb orb-3"></span>
-</div>
-
-<!-- ═══════════════════════  NAVBAR  ═══════════════════════════ -->
-<nav class="navbar">
-  <div class="nav-brand">
-    <svg class="brand-icon" viewBox="0 0 32 32" fill="none">
-      <path d="M16 2 C8 2 3 9 3 16 C3 24 8 30 16 30 C24 30 29 24 29 16 C29 9 24 2 16 2Z" stroke="var(--g4)" stroke-width="1.5" fill="none"/>
-      <path d="M16 8 L16 24 M10 12 Q13 16 16 14 Q19 12 22 16" stroke="var(--g3)" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="16" cy="8" r="2" fill="var(--g4)"/>
-    </svg>
-    <span class="brand-text">GreenCore<em>OS</em></span>
-  </div>
-
-  <div class="nav-status">
-    <span class="conn-dot" id="connDot"></span>
-    <span class="conn-label" id="connLabel">Connecting…</span>
-  </div>
-
-  <div class="nav-meta">
-    <span class="nav-time" id="navTime">--:--:--</span>
-    <span class="nav-badge">ESP32 · HTTP</span>
-  </div>
-</nav>
-
-<!-- ═══════════════════════  HERO STRIP  ════════════════════════ -->
-<header class="hero">
-  <div class="hero-inner">
-    <p class="hero-eyebrow">Smart Agriculture IoT Dashboard</p>
-    <h1 class="hero-title">Smart Greenhouse<br><span>Monitoring &amp; Control</span></h1>
-    <p class="hero-sub">Real-time environmental telemetry · Remote actuator control · ESP32 Integration</p>
-  </div>
-  <div class="hero-stats">
-    <div class="hstat"><span id="hUptime">00:00</span><em>Uptime</em></div>
-    <div class="hstat"><span id="hRefresh">5s</span><em>Refresh</em></div>
-    <div class="hstat"><span id="hActive">—</span><em>Devices On</em></div>
-  </div>
-</header>
-
-<!-- ═══════════════════════  MAIN CONTENT  ══════════════════════ -->
-<main class="main">
-
-  <!-- ── SENSOR GRID ─────────────────────────────────────── -->
-  <section class="section">
-    <div class="section-head">
-      <h2>Live Sensor Telemetry</h2>
-      <div class="pulse-ring"><span></span>LIVE</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Greenhouse · Control Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ═══════════════════════  BACKGROUND  ═══════════════════════ -->
+    <div class="bg-grid"></div>
+    <div class="bg-orbs">
+      <span class="orb orb-1"></span>
+      <span class="orb orb-2"></span>
+      <span class="orb orb-3"></span>
     </div>
 
-    <div class="sensor-grid">
-
-      <!-- Temperature -->
-      <div class="sensor-card" data-key="temperature" data-unit="°C" data-max="50">
-        <div class="card-bg-glow glow-temp"></div>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 2a3 3 0 0 0-3 3v8.27A5 5 0 1 0 15 16V5a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="12" cy="17" r="2.5" fill="currentColor" opacity=".5"/>
-          </svg>
-        </div>
-        <div class="card-body">
-          <span class="card-label">Temperature</span>
-          <div class="card-value-row">
-            <span class="card-value" id="val-temperature">—</span>
-            <span class="card-unit">°C</span>
-          </div>
-          <div class="card-bar-wrap"><div class="card-bar" id="bar-temperature"></div></div>
-          <span class="card-status" id="status-temperature">Reading…</span>
-        </div>
+    <!-- ═══════════════════════  NAVBAR  ═══════════════════════════ -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <svg class="brand-icon" viewBox="0 0 32 32" fill="none">
+          <path
+            d="M16 2 C8 2 3 9 3 16 C3 24 8 30 16 30 C24 30 29 24 29 16 C29 9 24 2 16 2Z"
+            stroke="var(--g4)"
+            stroke-width="1.5"
+            fill="none"
+          />
+          <path
+            d="M16 8 L16 24 M10 12 Q13 16 16 14 Q19 12 22 16"
+            stroke="var(--g3)"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="16" cy="8" r="2" fill="var(--g4)" />
+        </svg>
+        <span class="brand-text">GreenCore<em>OS</em></span>
       </div>
 
-      <!-- Humidity -->
-      <div class="sensor-card" data-key="humidity" data-unit="%" data-max="100">
-        <div class="card-bg-glow glow-humi"></div>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 2 C12 2 5 10 5 15 a7 7 0 0 0 14 0 C19 10 12 2 12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="card-body">
-          <span class="card-label">Humidity</span>
-          <div class="card-value-row">
-            <span class="card-value" id="val-humidity">—</span>
-            <span class="card-unit">%</span>
-          </div>
-          <div class="card-bar-wrap"><div class="card-bar" id="bar-humidity"></div></div>
-          <span class="card-status" id="status-humidity">Reading…</span>
-        </div>
+      <div class="nav-status">
+        <span class="conn-dot" id="connDot"></span>
+        <span class="conn-label" id="connLabel">Connecting…</span>
       </div>
 
-      <!-- Soil Moisture -->
-      <div class="sensor-card" data-key="soil_moisture" data-unit="%" data-max="100">
-        <div class="card-bg-glow glow-soil"></div>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 21 C12 21 4 15 4 10 a8 8 0 0 1 16 0 C20 15 12 21 12 21Z" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M12 10 Q10 13 12 15 Q14 13 12 10Z" fill="currentColor" opacity=".6"/>
-          </svg>
-        </div>
-        <div class="card-body">
-          <span class="card-label">Soil Moisture</span>
-          <div class="card-value-row">
-            <span class="card-value" id="val-soil_moisture">—</span>
-            <span class="card-unit">%</span>
-          </div>
-          <div class="card-bar-wrap"><div class="card-bar" id="bar-soil_moisture"></div></div>
-          <span class="card-status" id="status-soil_moisture">Reading…</span>
-        </div>
+      <div class="nav-meta">
+        <span class="nav-time" id="navTime">--:--:--</span>
+        <span class="nav-badge">ESP32 · HTTP</span>
       </div>
+    </nav>
 
-      <!-- Light Intensity -->
-      <div class="sensor-card" data-key="light_intensity" data-unit="lux" data-max="1200">
-        <div class="card-bg-glow glow-light"></div>
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="card-body">
-          <span class="card-label">Light Intensity</span>
-          <div class="card-value-row">
-            <span class="card-value" id="val-light_intensity">—</span>
-            <span class="card-unit">lux</span>
-          </div>
-          <div class="card-bar-wrap"><div class="card-bar" id="bar-light_intensity"></div></div>
-          <span class="card-status" id="status-light_intensity">Reading…</span>
-        </div>
+    <!-- ═══════════════════════  HERO STRIP  ════════════════════════ -->
+    <header class="hero">
+      <div class="hero-inner">
+        <p class="hero-eyebrow">Smart Agriculture IoT Dashboard</p>
+        <h1 class="hero-title">
+          Smart Greenhouse<br /><span>Monitoring &amp; Control</span>
+        </h1>
+        <p class="hero-sub">
+          Real-time environmental telemetry · Remote actuator control · ESP32
+          Integration
+        </p>
       </div>
+      <div class="hero-stats">
+        <div class="hstat"><span id="hUptime">00:00</span><em>Uptime</em></div>
+        <div class="hstat"><span id="hRefresh">5s</span><em>Refresh</em></div>
+        <div class="hstat"><span id="hActive">—</span><em>Devices On</em></div>
+      </div>
+    </header>
 
-    </div>
-  </section>
-
-  <!-- ── DEVICE CONTROL ─────────────────────────────────── -->
-  <section class="section">
-    <div class="section-head">
-      <h2>Actuator Control</h2>
-      <span class="section-note">Commands forwarded to ESP32 via HTTP</span>
-    </div>
-
-    <div class="control-grid">
-
-      <!-- Water Pump -->
-      <div class="control-card" id="card-pump">
-        <div class="ctrl-gfx">
-          <svg class="ctrl-icon" viewBox="0 0 48 48" fill="none">
-            <rect x="8" y="28" width="32" height="12" rx="4" stroke="currentColor" stroke-width="2"/>
-            <path d="M16 28 V18 Q16 12 24 12 Q32 12 32 18 V28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M24 8 L24 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="38" cy="34" r="3" fill="currentColor" opacity=".4"/>
-            <path d="M6 34 Q4 30 6 28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <div class="ctrl-ripple" id="ripple-pump"></div>
+    <!-- ═══════════════════════  MAIN CONTENT  ══════════════════════ -->
+    <main class="main">
+      <!-- ── SENSOR GRID ─────────────────────────────────────── -->
+      <section class="section">
+        <div class="section-head">
+          <h2>Live Sensor Telemetry</h2>
+          <div class="pulse-ring"><span></span>LIVE</div>
         </div>
-        <div class="ctrl-info">
-          <h3>Water Pump</h3>
-          <p>Controls drip irrigation &amp; root-zone watering</p>
-          <div class="ctrl-indicator" id="ind-pump">
-            <span class="ind-dot"></span>
-            <span class="ind-text">OFFLINE</span>
+
+        <div class="sensor-grid">
+          <!-- Temperature -->
+          <div
+            class="sensor-card"
+            data-key="temperature"
+            data-unit="°C"
+            data-max="50"
+          >
+            <div class="card-bg-glow glow-temp"></div>
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2a3 3 0 0 0-3 3v8.27A5 5 0 1 0 15 16V5a3 3 0 0 0-3-3z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+                <circle
+                  cx="12"
+                  cy="17"
+                  r="2.5"
+                  fill="currentColor"
+                  opacity=".5"
+                />
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-label">Temperature</span>
+              <div class="card-value-row">
+                <span class="card-value" id="val-temperature">—</span>
+                <span class="card-unit">°C</span>
+              </div>
+              <div class="card-bar-wrap">
+                <div class="card-bar" id="bar-temperature"></div>
+              </div>
+              <span class="card-status" id="status-temperature">Reading…</span>
+            </div>
+          </div>
+
+          <!-- Humidity -->
+          <div
+            class="sensor-card"
+            data-key="humidity"
+            data-unit="%"
+            data-max="100"
+          >
+            <div class="card-bg-glow glow-humi"></div>
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2 C12 2 5 10 5 15 a7 7 0 0 0 14 0 C19 10 12 2 12 2Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-label">Humidity</span>
+              <div class="card-value-row">
+                <span class="card-value" id="val-humidity">—</span>
+                <span class="card-unit">%</span>
+              </div>
+              <div class="card-bar-wrap">
+                <div class="card-bar" id="bar-humidity"></div>
+              </div>
+              <span class="card-status" id="status-humidity">Reading…</span>
+            </div>
+          </div>
+
+          <!-- Soil Moisture -->
+          <div
+            class="sensor-card"
+            data-key="soil_moisture"
+            data-unit="%"
+            data-max="100"
+          >
+            <div class="card-bg-glow glow-soil"></div>
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 21 C12 21 4 15 4 10 a8 8 0 0 1 16 0 C20 15 12 21 12 21Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+                <path
+                  d="M12 10 Q10 13 12 15 Q14 13 12 10Z"
+                  fill="currentColor"
+                  opacity=".6"
+                />
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-label">Soil Moisture</span>
+              <div class="card-value-row">
+                <span class="card-value" id="val-soil_moisture">—</span>
+                <span class="card-unit">%</span>
+              </div>
+              <div class="card-bar-wrap">
+                <div class="card-bar" id="bar-soil_moisture"></div>
+              </div>
+              <span class="card-status" id="status-soil_moisture"
+                >Reading…</span
+              >
+            </div>
+          </div>
+
+          <!-- Light Intensity -->
+          <div
+            class="sensor-card"
+            data-key="light_intensity"
+            data-unit="lux"
+            data-max="1200"
+          >
+            <div class="card-bg-glow glow-light"></div>
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+                <path
+                  d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <div class="card-body">
+              <span class="card-label">Light Intensity</span>
+              <div class="card-value-row">
+                <span class="card-value" id="val-light_intensity">—</span>
+                <span class="card-unit">lux</span>
+              </div>
+              <div class="card-bar-wrap">
+                <div class="card-bar" id="bar-light_intensity"></div>
+              </div>
+              <span class="card-status" id="status-light_intensity"
+                >Reading…</span
+              >
+            </div>
           </div>
         </div>
-        <div class="ctrl-actions">
-          <button class="btn-on"  onclick="controlDevice('pump','on')">
-            <svg viewBox="0 0 16 16"><path d="M8 2v5M5.27 3.27a5 5 0 1 0 5.46 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
-            Turn ON
-          </button>
-          <button class="btn-off" onclick="controlDevice('pump','off')">
-            <svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
-            Turn OFF
-          </button>
-        </div>
-      </div>
+      </section>
 
-      <!-- Cooling Fan -->
-      <div class="control-card" id="card-fan">
-        <div class="ctrl-gfx">
-          <svg class="ctrl-icon" id="fan-svg" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="3" fill="currentColor"/>
-            <path d="M24 21 Q22 14 16 14 Q14 14 14 16 Q14 22 21 21Z" stroke="currentColor" stroke-width="1.8" fill="currentColor" opacity=".4"/>
-            <path d="M27 24 Q34 22 34 16 Q34 14 32 14 Q26 14 27 21Z" stroke="currentColor" stroke-width="1.8" fill="currentColor" opacity=".4"/>
-            <path d="M24 27 Q26 34 32 34 Q34 34 34 32 Q34 26 27 27Z" stroke="currentColor" stroke-width="1.8" fill="currentColor" opacity=".4"/>
-            <path d="M21 24 Q14 26 14 32 Q14 34 16 34 Q22 34 21 27Z" stroke="currentColor" stroke-width="1.8" fill="currentColor" opacity=".4"/>
-          </svg>
-          <div class="ctrl-ripple" id="ripple-fan"></div>
+      <!-- ── DEVICE CONTROL ─────────────────────────────────── -->
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Device Activity Graphs</h2>
         </div>
-        <div class="ctrl-info">
-          <h3>Cooling Fan</h3>
-          <p>Regulates ambient temperature &amp; air circulation</p>
-          <div class="ctrl-indicator" id="ind-fan">
-            <span class="ind-dot"></span>
-            <span class="ind-text">OFFLINE</span>
+
+        <div class="graph-grid">
+          <div class="graph-card">
+            <h3>Fan Activity</h3>
+            <canvas id="fanChart"></canvas>
+          </div>
+
+          <div class="graph-card">
+            <h3>Pump Activity</h3>
+            <canvas id="pumpChart"></canvas>
           </div>
         </div>
-        <div class="ctrl-actions">
-          <button class="btn-on"  onclick="controlDevice('fan','on')">
-            <svg viewBox="0 0 16 16"><path d="M8 2v5M5.27 3.27a5 5 0 1 0 5.46 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
-            Turn ON
-          </button>
-          <button class="btn-off" onclick="controlDevice('fan','off')">
-            <svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
-            Turn OFF
-          </button>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Actuator Control</h2>
+          <span class="section-note">Commands forwarded to ESP32 via HTTP</span>
         </div>
-      </div>
 
-    </div>
-  </section>
+        <div class="control-grid">
+          <!-- Water Pump -->
+          <div class="control-card" id="card-pump">
+            <div class="ctrl-gfx">
+              <svg class="ctrl-icon" viewBox="0 0 48 48" fill="none">
+                <rect
+                  x="8"
+                  y="28"
+                  width="32"
+                  height="12"
+                  rx="4"
+                  stroke="currentColor"
+                  stroke-width="2"
+                />
+                <path
+                  d="M16 28 V18 Q16 12 24 12 Q32 12 32 18 V28"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M24 8 L24 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <circle
+                  cx="38"
+                  cy="34"
+                  r="3"
+                  fill="currentColor"
+                  opacity=".4"
+                />
+                <path
+                  d="M6 34 Q4 30 6 28"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="ctrl-ripple" id="ripple-pump"></div>
+            </div>
+            <div class="ctrl-info">
+              <h3>Water Pump</h3>
+              <p>Controls drip irrigation &amp; root-zone watering</p>
+              <div class="ctrl-indicator" id="ind-pump">
+                <span class="ind-dot"></span>
+                <span class="ind-text">OFFLINE</span>
+              </div>
+            </div>
+            <div class="ctrl-actions">
+              <button class="btn-on" onclick="controlDevice('pump', 'on')">
+                <svg viewBox="0 0 16 16">
+                  <path
+                    d="M8 2v5M5.27 3.27a5 5 0 1 0 5.46 0"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                </svg>
+                Turn ON
+              </button>
+              <button class="btn-off" onclick="controlDevice('pump', 'off')">
+                <svg viewBox="0 0 16 16">
+                  <rect
+                    x="3"
+                    y="3"
+                    width="10"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    fill="none"
+                  />
+                </svg>
+                Turn OFF
+              </button>
+            </div>
+          </div>
 
-  <!-- ── ACTIVITY LOG ───────────────────────────────────── -->
-  <section class="section">
-    <div class="section-head">
-      <h2>Activity Log</h2>
-      <button class="clear-btn" onclick="clearLog()">Clear</button>
-    </div>
-    <div class="log-box" id="logBox">
-      <div class="log-empty">No events yet. Dashboard starting…</div>
-    </div>
-  </section>
+          <!-- Cooling Fan -->
+          <div class="control-card" id="card-fan">
+            <div class="ctrl-gfx">
+              <svg
+                class="ctrl-icon"
+                id="fan-svg"
+                viewBox="0 0 48 48"
+                fill="none"
+              >
+                <circle cx="24" cy="24" r="3" fill="currentColor" />
+                <path
+                  d="M24 21 Q22 14 16 14 Q14 14 14 16 Q14 22 21 21Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  fill="currentColor"
+                  opacity=".4"
+                />
+                <path
+                  d="M27 24 Q34 22 34 16 Q34 14 32 14 Q26 14 27 21Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  fill="currentColor"
+                  opacity=".4"
+                />
+                <path
+                  d="M24 27 Q26 34 32 34 Q34 34 34 32 Q34 26 27 27Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  fill="currentColor"
+                  opacity=".4"
+                />
+                <path
+                  d="M21 24 Q14 26 14 32 Q14 34 16 34 Q22 34 21 27Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  fill="currentColor"
+                  opacity=".4"
+                />
+              </svg>
+              <div class="ctrl-ripple" id="ripple-fan"></div>
+            </div>
+            <div class="ctrl-info">
+              <h3>Cooling Fan</h3>
+              <p>Regulates ambient temperature &amp; air circulation</p>
+              <div class="ctrl-indicator" id="ind-fan">
+                <span class="ind-dot"></span>
+                <span class="ind-text">OFFLINE</span>
+              </div>
+            </div>
+            <div class="ctrl-actions">
+              <button class="btn-on" onclick="controlDevice('fan', 'on')">
+                <svg viewBox="0 0 16 16">
+                  <path
+                    d="M8 2v5M5.27 3.27a5 5 0 1 0 5.46 0"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    fill="none"
+                  />
+                </svg>
+                Turn ON
+              </button>
+              <button class="btn-off" onclick="controlDevice('fan', 'off')">
+                <svg viewBox="0 0 16 16">
+                  <rect
+                    x="3"
+                    y="3"
+                    width="10"
+                    height="10"
+                    rx="2"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    fill="none"
+                  />
+                </svg>
+                Turn OFF
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  <!-- ── ESP32 REFERENCE ───────────────────────────────── -->
-  <section class="section">
-    <div class="section-head"><h2>ESP32 Integration Reference</h2></div>
-    <div class="esp-grid">
-      <div class="esp-block">
-        <h4>POST sensor readings</h4>
-        <pre><code>POST /api/sensor-data
+      <!-- ── ACTIVITY LOG ───────────────────────────────────── -->
+      <section class="section">
+        <div class="section-head">
+          <h2>Activity Log</h2>
+          <button class="clear-btn" onclick="clearLog()">Clear</button>
+        </div>
+        <div class="log-box" id="logBox">
+          <div class="log-empty">No events yet. Dashboard starting…</div>
+        </div>
+      </section>
+
+      <!-- ── ESP32 REFERENCE ───────────────────────────────── -->
+      <section class="section">
+        <div class="section-head"><h2>ESP32 Integration Reference</h2></div>
+        <div class="esp-grid">
+          <div class="esp-block">
+            <h4>POST sensor readings</h4>
+            <pre><code>POST /api/sensor-data
 Content-Type: application/json
 
 {
@@ -250,40 +447,40 @@ Content-Type: application/json
   "soil_moisture": 45.0,
   "light_intensity": 850
 }</code></pre>
-      </div>
-      <div class="esp-block">
-        <h4>Poll device commands</h4>
-        <pre><code>GET /api/sensor-data
+          </div>
+          <div class="esp-block">
+            <h4>Poll device commands</h4>
+            <pre><code>GET /api/sensor-data
 
 Response →  devices: {
   "pump": true,
   "fan": false
 }</code></pre>
-      </div>
-      <div class="esp-block">
-        <h4>Actuator endpoints</h4>
-        <pre><code>POST /api/pump/on
+          </div>
+          <div class="esp-block">
+            <h4>Actuator endpoints</h4>
+            <pre><code>POST /api/pump/on
 POST /api/pump/off
 POST /api/fan/on
 POST /api/fan/off
 
 → { "status": "ok" }</code></pre>
-      </div>
-    </div>
-  </section>
+          </div>
+        </div>
+      </section>
+    </main>
 
-</main>
+    <!-- ═══════════════════════  FOOTER  ════════════════════════════ -->
+    <footer class="footer">
+      <span>GreenCore<em>OS</em> · Smart Greenhouse Dashboard</span>
+      <span>ESP32 · Flask · HTTP · IoT</span>
+    </footer>
 
-<!-- ═══════════════════════  FOOTER  ════════════════════════════ -->
-<footer class="footer">
-  <span>GreenCore<em>OS</em> · Smart Greenhouse Dashboard</span>
-  <span>ESP32 · Flask · HTTP · IoT</span>
-</footer>
+    <!-- ── TOAST ──────────────────────────────────────────────────── -->
+    <div class="toast-wrap" id="toastWrap"></div>
 
-<!-- ── TOAST ──────────────────────────────────────────────────── -->
-<div class="toast-wrap" id="toastWrap"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
 </html>
- 
