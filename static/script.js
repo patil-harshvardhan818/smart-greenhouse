@@ -261,4 +261,107 @@ function startPolling() {
 addLog("GreenCoreOS dashboard loaded.", "ok");
 addLog("Starting sensor polling every 5s…", "");
 startPolling();
- 
+
+// ================= FAN GRAPH =================
+
+const fanCtx = document.getElementById('fanChart');
+
+const fanChart = new Chart(fanCtx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: [],
+
+        datasets: [{
+
+            label: 'Fan Status',
+
+            data: [],
+
+            borderWidth: 3,
+
+            tension: 0.4
+        }]
+    },
+
+    options: {
+
+        responsive: true
+    }
+});
+
+// ================= PUMP GRAPH =================
+
+const pumpCtx = document.getElementById('pumpChart');
+
+const pumpChart = new Chart(pumpCtx, {
+
+    type: 'line',
+
+    data: {
+
+        labels: [],
+
+        datasets: [{
+
+            label: 'Pump Status',
+
+            data: [],
+
+            borderWidth: 3,
+
+            tension: 0.4
+        }]
+    },
+
+    options: {
+
+        responsive: true
+    }
+});
+
+// ================= UPDATE GRAPH =================
+
+function updateGraphs() {
+
+    const time = new Date().toLocaleTimeString();
+
+    // FAN
+
+    fanChart.data.labels.push(time);
+
+    fanChart.data.datasets[0].data.push(
+        deviceState.fan ? 1 : 0
+    );
+
+    // PUMP
+
+    pumpChart.data.labels.push(time);
+
+    pumpChart.data.datasets[0].data.push(
+        deviceState.pump ? 1 : 0
+    );
+
+    // LIMIT DATA
+
+    if (fanChart.data.labels.length > 10) {
+
+        fanChart.data.labels.shift();
+
+        fanChart.data.datasets[0].data.shift();
+
+        pumpChart.data.labels.shift();
+
+        pumpChart.data.datasets[0].data.shift();
+    }
+
+    fanChart.update();
+
+    pumpChart.update();
+}
+
+// AUTO UPDATE
+
+setInterval(updateGraphs, 5000);
