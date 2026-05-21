@@ -261,3 +261,4 @@ function startPolling() {
 addLog("GreenCoreOS dashboard loaded.", "ok");
 addLog("Starting sensor polling every 5s…", "");
 startPolling();
+ 
