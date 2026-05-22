@@ -190,45 +190,7 @@
             </div>
           </div>
 
-          <!-- Light Intensity -->
-          <div
-            class="sensor-card"
-            data-key="light_intensity"
-            data-unit="lux"
-            data-max="1200"
-          >
-            <div class="card-bg-glow glow-light"></div>
-            <div class="card-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="4"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                />
-                <path
-                  d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </div>
-            <div class="card-body">
-              <span class="card-label">Light Intensity</span>
-              <div class="card-value-row">
-                <span class="card-value" id="val-light_intensity">—</span>
-                <span class="card-unit">lux</span>
-              </div>
-              <div class="card-bar-wrap">
-                <div class="card-bar" id="bar-light_intensity"></div>
-              </div>
-              <span class="card-status" id="status-light_intensity"
-                >Reading…</span
-              >
-            </div>
-          </div>
+
         </div>
       </section>
 
@@ -432,43 +394,6 @@
         </div>
       </section>
 
-      <!-- ── ESP32 REFERENCE ───────────────────────────────── -->
-      <section class="section">
-        <div class="section-head"><h2>ESP32 Integration Reference</h2></div>
-        <div class="esp-grid">
-          <div class="esp-block">
-            <h4>POST sensor readings</h4>
-            <pre><code>POST /api/sensor-data
-Content-Type: application/json
-
-{
-  "temperature": 28.5,
-  "humidity": 62.0,
-  "soil_moisture": 45.0,
-  "light_intensity": 850
-}</code></pre>
-          </div>
-          <div class="esp-block">
-            <h4>Poll device commands</h4>
-            <pre><code>GET /api/sensor-data
-
-Response →  devices: {
-  "pump": true,
-  "fan": false
-}</code></pre>
-          </div>
-          <div class="esp-block">
-            <h4>Actuator endpoints</h4>
-            <pre><code>POST /api/pump/on
-POST /api/pump/off
-POST /api/fan/on
-POST /api/fan/off
-
-→ { "status": "ok" }</code></pre>
-          </div>
-        </div>
-      </section>
-    </main>
 
     <!-- ═══════════════════════  FOOTER  ════════════════════════════ -->
     <footer class="footer">
